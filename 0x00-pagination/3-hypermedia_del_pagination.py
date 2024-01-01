@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-'''
-    Pagination
-'''
+"""
+Deletion-resilient hypermedia pagination
+"""
+
 import csv
 import math
-from typing import List, Tuple, Dict, Union
+from typing import List, Dict
 
 
 class Server:
@@ -14,6 +15,7 @@ class Server:
 
     def __init__(self):
         self.__dataset = None
+        self.__indexed_dataset = None
 
     def dataset(self) -> List[List]:
         """Cached dataset
@@ -26,39 +28,34 @@ class Server:
 
         return self.__dataset
 
-    def index_range(self, page: int, page_size: int) -> Tuple[int, int]:
-        '''
-             return a tuple of size two containing a
-             start index and an end index corresponding to the
-             range of indexes to return in a list
-             for those particular pagination parameters.
-        '''
-        end_index = page * page_size
-        return (end_index - page_size, end_index)
+    def indexed_dataset(self) -> Dict[int, List]:
+        """Dataset indexed by sorting position, starting at 0
+        """
+        if self.__indexed_dataset is None:
+            dataset = self.dataset()
+            truncated_dataset = dataset[:1000]
+            self.__indexed_dataset = {
+                i: dataset[i] for i in range(len(dataset))
+            }
+        return self.__indexed_dataset
 
-    def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
-        '''
-            Paginates dataset
-        '''
-        assert type(page) is int and page > 0
-        assert type(page_size) is int and page_size > 0
-
-        start, end = self.index_range(page, page_size)
-        return self.dataset()[start:end]
-
-    def get_hyper(self, page: int = 1, page_size: int = 10
-                  ) -> Dict[str, Union[int, List[List], None]]:
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         '''
             Gets Hypermedia
         '''
-        dataset = self.get_page(page, page_size)
-        rows = len(self.dataset())
-        total_pages = int(rows / page_size)
+        assert index is None or 0 <= index < len(self.indexed_dataset()), "Index out of range"
+
+        data = []
+        current_index = index if index is not None else 0
+        next_index = min(current_index + page_size, len(self.indexed_dataset()))
+
+        if current_index < next_index:
+            data = [self.indexed_dataset()[i] for i in range(current_index, next_index)]
+
         return {
-                'page_size': len(dataset),
-                'page': page,
-                'data': dataset,
-                'next_page': page + 1 if page < total_pages else None,
-                'prev_page': page - 1 if page > 1 else None,
-                'total_pages': total_pages
-                }
+            'index': current_index,
+            'next_index': next_index,
+            'page_size': page_size,
+            'data': data,
+        }
+
