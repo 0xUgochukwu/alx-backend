@@ -43,21 +43,23 @@ class Server:
         '''
             Gets Hypermedia
         '''
-        index = 0 if index is None
+        index = 0 if index is None else index
 
-        assert isinstance(index, int)
+        assert type(index) is int
         assert 0 <= index < len(self.indexed_dataset())
-        assert isinstance(page_size, int) and page_size > 0
+        assert type(page_size) is int and page_size > 0
 
-        data = [] 
+        dataset = self.indexed_dataset()
+        data = []
+        current_index = index
         next_index = index + page_size
 
-        for value in range(index, next_index):
-            if self.indexed_dataset().get(value):
-                data.append(self.indexed_dataset()[value])
+        while current_index < next_index:
+            if dataset.get(current_index):
+                data.append(dataset[current_index])
             else:
-                #value += 1
                 next_index += 1
+            current_index += 1
 
         return {
             'index': index,
