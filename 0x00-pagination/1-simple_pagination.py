@@ -2,10 +2,9 @@
 '''
     Pagination
 '''
-from typing import Tuple
 
 
-def index_range(page: int, page_size: int) -> Tuple[int, int]:
+def index_range(page, page_size):
     '''
          return a tuple of size two containing a
          start index and an end index corresponding to the
