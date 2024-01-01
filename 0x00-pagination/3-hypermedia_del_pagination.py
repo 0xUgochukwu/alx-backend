@@ -43,19 +43,25 @@ class Server:
         '''
             Gets Hypermedia
         '''
-        assert index is None or 0 <= index < len(self.indexed_dataset()), "Index out of range"
+        index = 0 if index is None
 
-        data = []
-        current_index = index if index is not None else 0
-        next_index = min(current_index + page_size, len(self.indexed_dataset()))
+        assert isinstance(index, int)
+        assert 0 <= index < len(self.indexed_dataset())
+        assert isinstance(page_size, int) and page_size > 0
 
-        if current_index < next_index:
-            data = [self.indexed_dataset()[i] for i in range(current_index, next_index)]
+        data = [] 
+        next_index = index + page_size
+
+        for value in range(index, next_index):
+            if self.indexed_dataset().get(value):
+                data.append(self.indexed_dataset()[value])
+            else:
+                #value += 1
+                next_index += 1
 
         return {
-            'index': current_index,
-            'next_index': next_index,
-            'page_size': page_size,
+            'index': index,
             'data': data,
+            'page_size': page_size,
+            'next_index': next_index
         }
-
