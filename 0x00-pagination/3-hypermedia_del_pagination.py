@@ -44,12 +44,12 @@ class Server:
             Gets Hypermedia
         '''
         index = 0 if index is None else index
+        dataset = self.indexed_dataset()
 
         assert type(index) is int
-        assert 0 <= index < len(self.indexed_dataset())
+        assert 0 <= index < len(dataset)
         assert type(page_size) is int and page_size > 0
 
-        dataset = self.indexed_dataset()
         data = []
         current_index = index
         next_index = index + page_size
