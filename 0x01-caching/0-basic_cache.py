@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" Caching.
+""" Caching Implementation.
 """
 BaseCaching = __import__('base_caching').BaseCaching
 
