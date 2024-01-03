@@ -4,8 +4,8 @@
 BaseCaching = __import__('base_caching').BaseCaching
 
 
-class LIFOCache(BaseCaching):
-    """ Last In First Out Caching Class
+class MRUCache(BaseCaching):
+    """ Most Recently Used Caching Class
     """
 
     def __init__(self):
