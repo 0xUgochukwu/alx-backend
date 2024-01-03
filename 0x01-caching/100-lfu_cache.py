@@ -27,15 +27,21 @@ class LFUCache(BaseCaching):
             self.__queue.append(key)
 
             if len(self.cache_data) > self.MAX_ITEMS:
-                least_f_used = min(self.__trackpad, key=lambda k: (
-                    self.__trackpad[k], self.__queue.index(k)))
+                # print(self.__trackpad)
+                # print(self.__queue)
+                # print(self.cache_data)
+                trackpad = self.__trackpad.copy()
+                trackpad.pop(key)
+                least_f_used = min(trackpad, key=lambda k: (
+                    trackpad[k], self.__queue.index(k)))
+                # min_freq = min(trackpad.values())
+                # min_freq_keys = [k for k, f in trackpad.items() if f == min_freq]
+                # least_f_used = min(min_freq_keys, key=lambda k: self.__queue.index(k))
+
                 self.__trackpad.pop(least_f_used)
                 self.__queue.remove(least_f_used)
                 self.cache_data.pop(least_f_used)
                 print(f'DISCARD: {least_f_used}')
-                # print(self.__trackpad)
-                # print(self.__queue)
-                # print(self.cache_data)
 
     def get(self, key):
         """ Get an item from the cache
