@@ -10,7 +10,7 @@ class LFUCache(BaseCaching):
 
     def __init__(self):
         super().__init__()
-        self.__queue = [] 
+        self.__queue = []
         self.__trackpad = {}
 
     def put(self, key, item):
@@ -22,12 +22,12 @@ class LFUCache(BaseCaching):
                 self.__queue.remove(key)
             else:
                 self.__trackpad[key] = 1
-            
+
             self.cache_data[key] = item
             self.__queue.append(key)
 
             if len(self.cache_data) > self.MAX_ITEMS:
-                least_f_used = min(self.__trackpad,key=lambda k: (
+                least_f_used = min(self.__trackpad, key=lambda k: (
                     self.__trackpad[k], self.__queue.index(k)))
                 self.__trackpad.pop(least_f_used)
                 self.__queue.remove(least_f_used)
@@ -44,5 +44,5 @@ class LFUCache(BaseCaching):
             self.__trackpad[key] += 1
             self.__queue.remove(key)
             self.__queue.append(key)
-        
+
         return self.cache_data.get(key, None)
