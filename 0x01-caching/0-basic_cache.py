@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """ Caching
 """
 BaseCaching = __import__('base_caching').BaseCaching
@@ -12,7 +12,7 @@ class BasicCache(BaseCaching):
         """ Put an item in the cache
         """
         if key is not None and item is not None:
-            self.cache_data.update({key: item})
+            self.cache_data[key] = item
 
     def get(self, key):
         """ Get an item from the cache
