@@ -53,6 +53,7 @@ def before_request():
     '''
     setattr(g, 'user', get_user(request.args.get('login_as', 0)))
 
+
 @app.route('/', strict_slashes=False)
 def index() -> str:
     ''' Index route

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 ''' i18n - Basic Flask App
 '''
+import pytz
 from typing import Dict, Union
 from flask import Flask
 from flask import render_template
@@ -20,6 +21,19 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 babel = Babel(app)
+
+
+@babel.timezoneselector
+def get_timezone() -> Union[str, None]:
+    ''' Gets the locale timezone
+    '''
+    tz = request.args.get('timezone', '').strip()
+    if not tz and g.user:
+        tz = g.user['timezone']
+    try:
+        return pytz.timezone(tz).zone
+    except pytz.exceptions.UnknownTimeZoneError:
+        return app.config["BABEL_DEFAULT_TIMEZONE"]
 
 
 @babel.localeselector
