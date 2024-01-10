@@ -1,8 +1,9 @@
-#!/usr/bin/python3
-''' i18n - Basic Flask App
-'''
-
-from flask import Flask, render_template
+#!/usr/bin/env python3
+"""
+A Basic flask application
+"""
+from flask import Flask
+from flask import render_template
 
 
 app = Flask(__name__)
@@ -10,8 +11,9 @@ app = Flask(__name__)
 
 @app.route('/', strict_slashes=False)
 def index() -> str:
-    ''' Index route
-    '''
+    """
+    Renders a basic html template
+    """
     return render_template('0-index.html')
 
 
