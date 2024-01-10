@@ -2,11 +2,13 @@
 ''' i18n - Basic Flask App
 '''
 import pytz
+from datetime import datetime
 from typing import Dict, Union
 from flask import Flask
 from flask import render_template
 from flask import g, request
 from flask_babel import Babel
+from flask_babel import format_datetime
 
 
 class Config(object):
@@ -71,13 +73,14 @@ def before_request():
     ''' Sets global variable for logged in user
     '''
     setattr(g, 'user', get_user(request.args.get('login_as', 0)))
+    setattr(g, 'time', format_datetime(datetime.now()))
 
 
 @app.route('/', strict_slashes=False)
 def index() -> str:
     ''' Index route
     '''
-    return render_template('6-index.html')
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
