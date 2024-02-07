@@ -1,4 +1,4 @@
-import { createClient } from 'redis';
+import { createClient, print } from 'redis';
 
 const client = createClient();
 
@@ -10,3 +10,13 @@ client.on("error", (error) => {
 client.on("connect", () => {
   console.log("Redis client connected to the server")
 });
+
+function setNewSchool(schoolName, value) {
+  client.SET(schoolName, value, print);
+}
+
+function displayNewSchool(schoolName) {
+  client.GET(schoolName, (err, value) => {
+    console.log(value);
+  });
+}
